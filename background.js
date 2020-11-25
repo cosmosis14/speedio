@@ -1,5 +1,5 @@
 chrome.runtime.onInstalled.addListener(function() {
-  chrome.storage.sync.set({ isOn: true })
+  chrome.storage.sync.set({ isOn: true, speedInterval: 0.25})
 
   chrome.browserAction.setBadgeText({text: 'On'})
   chrome.browserAction.setBadgeBackgroundColor({color: '#F00'})
@@ -18,8 +18,16 @@ chrome.browserAction.onClicked.addListener(function () {
 })
 
 chrome.commands.onCommand.addListener(function(command) {
-  if (command === 'speed-up') changeSpeed(0.25)
-  else if (command === 'speed-down') changeSpeed(-0.25)
+  if (command === 'speed-up' || command === 'speed-down') {
+    chrome.storage.sync.get('isOn', function (data) {
+      if (data.isOn) {
+        chrome.storage.sync.get('speedInterval', function (data) {
+          if (command === 'speed-up') changeSpeed(data.speedInterval)
+          else if (command === 'speed-down') changeSpeed(-(data.speedInterval))  
+        })
+      }
+    })
+  }
 })
 
 function changeSpeed(speedDiff) {
@@ -32,7 +40,7 @@ function changeSpeed(speedDiff) {
         speedioVideos = document.getElementsByTagName('video')
         // console.log(speedioVideos)
         for (const video of speedioVideos) {
-          if (video.playbackRate <= 0.25 && ${speedDiff} < 0) break
+          if (video.playbackRate + ${speedDiff} <= 0.01) break
           video.playbackRate += ${speedDiff}
           console.log(video.playbackRate)
         }
