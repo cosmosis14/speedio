@@ -37,6 +37,9 @@ function changeSpeed(speedDiff) {
     chrome.tabs.executeScript(tabs[0].id,
       {
         code: `
+        var curTimeout = curTimeout ? curTimeout : 0
+        if (curTimeout) clearTimeout(curTimeout)
+
         var curRate
         var speedioVideos = document.getElementsByTagName('video')
         // console.log(speedioVideos)
@@ -59,11 +62,12 @@ function changeSpeed(speedDiff) {
 
         document.body.appendChild(speedUpdateDiv)
 
-        setTimeout(() => {
+        var curTimeout = setTimeout(() => {
           speedUpdateDiv.style.visibility = 'hidden'
+          curTimeout = 0
         }, 500)
         `
-        // TODO: implement visual confirmation of speed change with current playback rate (fading popup in the DOM)
+        // TODO: fade in/out the modal
       })
   })
 }
