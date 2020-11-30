@@ -1,5 +1,6 @@
 # Speedio
-#### Speedy-Video Extension for Google Chrome
+#### [Speedy-Video Extension for Google Chrome](https://chrome.google.com/webstore/detail/speedio/gklojipgiifiibknkdphjpjlagahogcn?hl=en):
+
 
 Control video playback speed with handy keyboard shortcuts:
 
