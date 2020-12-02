@@ -48,7 +48,32 @@ function changeSpeed(speedDiff) {
         if (curTimeout) clearTimeout(curTimeout)
 
         var curRate
-        var speedioVideos = document.getElementsByTagName('video')
+
+        // Get parent document videos and convert to regular array
+        var videoCollection = document.getElementsByTagName('video')
+        var speedioVideos = []
+        for (const video of videoCollection) {
+          speedioVideos.push(video)
+        }
+        
+        // add video elements within same-origin iframes
+        var iframes = document.getElementsByTagName('iframe')
+        for (const iframe of iframes) {
+          let iframeURL
+          if (iframe.src) {
+            iframeURL = new URL(iframe.src)
+          }
+          
+          if (!iframeURL || iframeURL.hostname === window.location.hostname) {
+            let iframeContent = iframe.contentDocument || iframe.contentWindow.document
+            let iframeVideos = iframeContent.getElementsByTagName('video')
+            // console.log(iframeVideos)
+            for (const video of iframeVideos) {
+              speedioVideos.push(video)
+            }
+          }
+        }
+        
         // console.log(speedioVideos)
         for (const video of speedioVideos) {
           // Respect hard limits of HTML5 video playback speeds
